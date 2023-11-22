@@ -1,6 +1,5 @@
 import dashjs from "dashjs";
 import bindToDashjs from "../../binders/dashjs";
-// import { updateToxics } from "../utils";
 
 /**
  * Scenario to launch a low-latency DASH content with autoPlay until a timeout,
@@ -23,6 +22,7 @@ export default function DashJsSimpleLoadVideoDash(
   // TODO ending condition
   return new Promise(async (res) => {
     let hasEnded = false;
+
     const player = dashjs.MediaPlayer().create();
     window.player = player;
     const unbind = bindToDashjs(player, mediaElement, metricsStore);

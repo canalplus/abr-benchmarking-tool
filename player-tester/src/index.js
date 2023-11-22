@@ -35,7 +35,12 @@ async function run() {
     chartContainerElt.appendChild(h3ChartElt);
     chartContainerElt.appendChild(chart.canvas);
     currentTestNameElt.innerText = testName;
-    await playerFn(videoElement, metricsStore, LOW_LATENCY_MPD_URL, 10_000);
+
+    await updateToxics({ rate: 10000 }, null);
+    setTimeout(() => {
+      updateToxics({ rate: 100 }, null);
+    }, 7000);
+    await playerFn(videoElement, metricsStore, LOW_LATENCY_MPD_URL, 20_000);
 
     chart.stopUpdating();
     const chartData = metricsStore.exportData();

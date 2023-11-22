@@ -1,7 +1,6 @@
 import RxPlayer from "rx-player/minimal";
 import { DASH } from "rx-player/features";
 import bindToRxPlayer from "../../binders/rx-player";
-// import { updateToxics } from "../utils";
 
 RxPlayer.addFeatures([DASH]);
 /**
@@ -26,7 +25,6 @@ export default function RxPlayerSimpleLoadVideoDash(
   return new Promise(async (res) => {
     let hasEnded = false;
 
-    // await updateToxics({ rate: 1000 }, { jitter: 50, latency: 50 });
     const player = new RxPlayer({ videoElement: mediaElement });
     window.player = player;
     const unbind = bindToRxPlayer(player, mediaElement, metricsStore);

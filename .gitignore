@@ -1,4 +1,5 @@
 /cdn-video-server/toxiproxy-server
+/cdn-video-server/toxiproxy-cli
 /player-tester/node_modules
 /player-tester/dist
 /player-tester/.cache

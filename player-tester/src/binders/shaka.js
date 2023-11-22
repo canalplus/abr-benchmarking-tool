@@ -8,13 +8,33 @@ import { computeBufferSize, emitBufferingEvents } from "../utils";
  * @param {Object} metricsStore
  * @returns {Function} - returns a function to unsubscribe to binded events.
  */
-export default function bindToShaka(_player, videoElement, metricsStore) {
+export default function bindToShaka(player, videoElement, metricsStore) {
+  player.addEventListener('adaptation', onAdaptation);
   const stopEmittingBuffering = emitBufferingEvents(videoElement, metricsStore);
   updatePlaybackRate();
   videoElement.addEventListener("ratechange", updatePlaybackRate);
 
   updateBufferSize();
   const bufferSizeItv = setInterval(updateBufferSize, 100);
+
+  let videoBandwidth;
+  let audioBandwidth;
+
+  function onAdaptation() {
+    var tracks = player.getVariantTracks();
+    tracks.forEach(function(t) {
+      if (t.active) {  // an active track, that is, in use by the player right now
+        if (videoBandwidth !== t.videoBandwidth) {
+          videoBandwidth = t.videoBandwidth;
+          metricsStore.registerEvent("videoBitrate", videoBandwidth);
+        }
+        if (audioBandwidth !== t.audioBandwidth) {
+          audioBandwidth = t.audioBandwidth;
+          metricsStore.registerEvent("audioBitrate", audioBandwidth);
+        }
+      }
+    });
+  }
 
   function updateBufferSize() {
     const bufferSize = computeBufferSize(videoElement);
@@ -34,5 +54,6 @@ export default function bindToShaka(_player, videoElement, metricsStore) {
     // unbind event listeners
     clearInterval(bufferSizeItv);
     videoElement.removeEventListener("ratechange", updatePlaybackRate);
+    player.removeEventListener('adaptation', onAdaptation);
   };
 }
